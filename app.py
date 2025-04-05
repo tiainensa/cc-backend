@@ -29,7 +29,7 @@ def get_sentiment():
 
     # Map prediction to sentiment
     sentiment = "Positive" if prediction == 1 else "Negative"
-    score = confidence if prediction == 1 else -confidence
+    score = float(confidence) if prediction == 1 else float(-confidence)  # Convert to float
 
     return jsonify({"text": text, "sentiment": sentiment, "score": score})
 
