@@ -27,17 +27,13 @@ def get_sentiment():
 
     # Use the pipeline to make a prediction
     prediction = model.predict([text])[0]
-    confidence = model.decision_function([text])  # Do not extract [0] yet
+    confidence = model.decision_function([text])[0]  # Extract the first row of the 2D array
 
-    print(f"DEBUG: decision_function output: {confidence}")  # Debugging
-
-    # Extract the first element if it's an array
-    if isinstance(confidence, (list, np.ndarray)):
-        confidence = confidence[0]
+    # Extract the confidence score for the predicted class
+    score = float(confidence[prediction])  # Use the predicted class index to get the score
 
     # Map prediction to sentiment
     sentiment = "Positive" if prediction == 1 else "Negative"
-    score = float(confidence)  # Convert the scalar to a float
 
     return jsonify({"text": text, "sentiment": sentiment, "score": score})
 
