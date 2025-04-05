@@ -27,7 +27,11 @@ def get_sentiment():
 
     # Use the pipeline to make a prediction
     prediction = model.predict([text])[0]  # Get the predicted label (e.g., 'positive', 'negative', 'neutral')
-    confidence = model.decision_function([text])[0]  # Extract the first row of the 2D array
+    decision_function = model.decision_function([text])
+
+    probabilities = np.exp(decision_function) / np.sum(np.exp(decision_function))
+
+    confidence = probabilities.max() # Get the maximum probability
 
     print(f"DEBUG: prediction: {prediction}")  # Debugging
     print(f"DEBUG: confidence: {confidence}")  # Debugging
