@@ -25,11 +25,11 @@ def get_sentiment():
 
     # Use the pipeline to make a prediction
     prediction = model.predict([text])[0]
-    confidence = model.decision_function([text])[0]
+    confidence = model.decision_function([text])[0]  # Extract the first element
 
     # Map prediction to sentiment
     sentiment = "Positive" if prediction == 1 else "Negative"
-    score = float(confidence) if prediction == 1 else float(-confidence)  # Convert to float
+    score = float(confidence)  # Convert the scalar to a float
 
     return jsonify({"text": text, "sentiment": sentiment, "score": score})
 
