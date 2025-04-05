@@ -26,17 +26,24 @@ def get_sentiment():
     model = load_model()
 
     # Use the pipeline to make a prediction
-    prediction = int(model.predict([text])[0])  # Ensure prediction is an integer
+    prediction = model.predict([text])[0]  # Get the predicted label (e.g., 'positive', 'negative', 'neutral')
     confidence = model.decision_function([text])[0]  # Extract the first row of the 2D array
 
     print(f"DEBUG: prediction: {prediction}")  # Debugging
     print(f"DEBUG: confidence: {confidence}")  # Debugging
 
-    # Extract the confidence score for the predicted class
-    score = float(confidence[prediction])  # Use the predicted class index to get the score
-
-    # Map prediction to sentiment
-    sentiment = "Positive" if prediction == 1 else "Negative"
+    # Map prediction to sentiment and extract the confidence score
+    if prediction == 'positive':
+        sentiment = "Positive"
+        score = float(confidence[1])  # Assuming index 1 corresponds to 'positive'
+    elif prediction == 'negative':
+        sentiment = "Negative"
+        score = float(confidence[0])  # Assuming index 0 corresponds to 'negative'
+    elif prediction == 'neutral':
+        sentiment = "Neutral"
+        score = 0.0  # Neutral sentiment can have a score of 0
+    else:
+        return jsonify({"error": "Unexpected prediction value"}), 500
 
     return jsonify({"text": text, "sentiment": sentiment, "score": score})
 
