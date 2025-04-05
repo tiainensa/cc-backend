@@ -26,8 +26,11 @@ def get_sentiment():
     model = load_model()
 
     # Use the pipeline to make a prediction
-    prediction = model.predict([text])[0]
+    prediction = int(model.predict([text])[0])  # Ensure prediction is an integer
     confidence = model.decision_function([text])[0]  # Extract the first row of the 2D array
+
+    print(f"DEBUG: prediction: {prediction}")  # Debugging
+    print(f"DEBUG: confidence: {confidence}")  # Debugging
 
     # Extract the confidence score for the predicted class
     score = float(confidence[prediction])  # Use the predicted class index to get the score
