@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pickle
 
+import numpy as np
+
 app = Flask(__name__)
 CORS(app, origins=["https://cc-front-render-r7sq.onrender.com"])  # Replace with your frontend's URL
 
@@ -25,7 +27,13 @@ def get_sentiment():
 
     # Use the pipeline to make a prediction
     prediction = model.predict([text])[0]
-    confidence = model.decision_function([text])[0]  # Extract the first element
+    confidence = model.decision_function([text])  # Do not extract [0] yet
+
+    print(f"DEBUG: decision_function output: {confidence}")  # Debugging
+
+    # Extract the first element if it's an array
+    if isinstance(confidence, (list, np.ndarray)):
+        confidence = confidence[0]
 
     # Map prediction to sentiment
     sentiment = "Positive" if prediction == 1 else "Negative"
