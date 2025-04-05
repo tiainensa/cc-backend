@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pickle
 
 app = Flask(__name__)
+CORS(app, origins=["https://cc-front-render-r7sq.onrender.com"])  # Replace with your frontend's URL
 
 # Load the pre-trained model and vectorizer
 def load_model():
