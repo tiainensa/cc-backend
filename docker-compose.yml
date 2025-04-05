@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Map container port 8080 to host port 8080
+    environment:
+      - DEBUG_MODE=True # Pass the debug mode environment variable
+    volumes:
+      - .:/usr/src/app # Mount the current directory for live code updates
