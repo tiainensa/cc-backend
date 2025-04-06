@@ -5,7 +5,7 @@ import pickle
 import numpy as np
 
 app = Flask(__name__)
-CORS(app, origins=["https://cc-front-render-r7sq.onrender.com"])  # Replace with your frontend's URL
+CORS(app, origins=["https://cc-front-render-r7sq.onrender.com"])
 
 # Load the pre-trained pipeline (model + vectorizer)
 def load_model():
@@ -26,23 +26,23 @@ def get_sentiment():
     model = load_model()
 
     # Use the pipeline to make a prediction
-    prediction = model.predict([text])[0]  # Get the predicted label (e.g., 'positive', 'negative', 'neutral')
+    prediction = model.predict([text])[0] 
     decision_function = model.decision_function([text])[0]  # Extract the first row of the 2D array
 
     # Exponentiate and normalize to get probabilities
     probabilities = np.exp(decision_function) / np.sum(np.exp(decision_function))
 
     # Get the confidence score for the predicted class
-    predicted_index = list(model.classes_).index(prediction)  # Find the index of the predicted class
-    confidence = probabilities[predicted_index]  # Get the probability for the predicted class
+    predicted_index = list(model.classes_).index(prediction)  
+    confidence = probabilities[predicted_index] 
 
-    print(f"DEBUG: prediction: {prediction}")  # Debugging
-    print(f"DEBUG: decision_function: {decision_function}")  # Debugging
-    print(f"DEBUG: probabilities: {probabilities}")  # Debugging
-    print(f"DEBUG: confidence: {confidence}")  # Debugging
+    print(f"DEBUG: prediction: {prediction}")
+    print(f"DEBUG: decision_function: {decision_function}")
+    print(f"DEBUG: probabilities: {probabilities}")
+    print(f"DEBUG: confidence: {confidence}")
 
     # Map prediction to sentiment
-    sentiment = prediction.capitalize()  # Capitalize the prediction (e.g., 'positive' -> 'Positive')
+    sentiment = prediction.capitalize()
 
     return jsonify({"text": text, "sentiment": sentiment, "score": round(confidence, 4)})  # Round confidence to 4 decimal places
 
