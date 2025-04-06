@@ -17,4 +17,4 @@ ENV DEBUG_MODE=True
 EXPOSE 8080
 
 # Command to run the backend
-CMD ["python", "./your-daemon-or-script.py"]
+CMD ["python", "./app.py"]
