@@ -27,29 +27,24 @@ def get_sentiment():
 
     # Use the pipeline to make a prediction
     prediction = model.predict([text])[0]  # Get the predicted label (e.g., 'positive', 'negative', 'neutral')
-    decision_function = model.decision_function([text])
+    decision_function = model.decision_function([text])[0]  # Extract the first row of the 2D array
 
+    # Exponentiate and normalize to get probabilities
     probabilities = np.exp(decision_function) / np.sum(np.exp(decision_function))
 
-    confidence = probabilities.max() # Get the maximum probability
+    # Get the confidence score for the predicted class
+    predicted_index = list(model.classes_).index(prediction)  # Find the index of the predicted class
+    confidence = probabilities[predicted_index]  # Get the probability for the predicted class
 
     print(f"DEBUG: prediction: {prediction}")  # Debugging
+    print(f"DEBUG: decision_function: {decision_function}")  # Debugging
+    print(f"DEBUG: probabilities: {probabilities}")  # Debugging
     print(f"DEBUG: confidence: {confidence}")  # Debugging
 
-    # Map prediction to sentiment and extract the confidence score
-    if prediction == 'positive':
-        sentiment = "Positive"
-        score = float(confidence[1])  # Assuming index 1 corresponds to 'positive'
-    elif prediction == 'negative':
-        sentiment = "Negative"
-        score = float(confidence[0])  # Assuming index 0 corresponds to 'negative'
-    elif prediction == 'neutral':
-        sentiment = "Neutral"
-        score = 0.0  # Neutral sentiment can have a score of 0
-    else:
-        return jsonify({"error": "Unexpected prediction value"}), 500
+    # Map prediction to sentiment
+    sentiment = prediction.capitalize()  # Capitalize the prediction (e.g., 'positive' -> 'Positive')
 
-    return jsonify({"text": text, "sentiment": sentiment, "score": score})
+    return jsonify({"text": text, "sentiment": sentiment, "score": round(confidence, 4)})  # Round confidence to 4 decimal places
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=False)
